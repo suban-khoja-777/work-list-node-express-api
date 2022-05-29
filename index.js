@@ -1,4 +1,4 @@
-const {API,REQUESTS} = require('./constant');
+const {API,REQUESTS,PATH} = require('./constant');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -25,8 +25,17 @@ app.use(morgan('combined'));
 
 const port = 3000
 
-app.get('/api/client', (request, response) => {
-  axios(REQUESTS.GET_ALL_CLIENTS())
+/* Worklist Tracker Start */
+
+/* Client Start */
+
+app.get(`/${PATH.APP_TRACKER}/client`, (request, response) => {
+  axios.get(API.BASE + API.ENDPOINTS.client,{
+    headers : {
+      'Content-Type' : API.HEADERS.CONTENT_TYPE,
+      'x-apikey' : API.HEADERS.API_KEY
+    }
+  })
   .then(res => {
     response.send(res.data);
   })
@@ -35,12 +44,24 @@ app.get('/api/client', (request, response) => {
   })
 });
 
-app.post('/api/client', (request, response) => {
-  axios(REQUESTS.NEW_CLIENT())
+app.post(`/${PATH.APP_TRACKER}/client`, (request, response) => {
+  
+  const NEW_CLIENT = {
+    Name : request.body.Name,
+    Rate : request.body.Rate
+  }
+
+  axios.post(API.BASE + API.ENDPOINTS.client,NEW_CLIENT,{
+    headers : {
+      'Content-Type' : API.HEADERS.CONTENT_TYPE,
+      'x-apikey' : API.HEADERS.API_KEY
+    }
+  })
   .then(res => {
     response.send({
-      clients : res[0].data,
-      work_entries : res[1].data,
+      Id : res.data._id,
+      Name : res.data.Name,
+      Rate : res.data.Rate
     });
   })
   .catch(err => {
@@ -48,21 +69,13 @@ app.post('/api/client', (request, response) => {
   })
 });
 
-app.delete('/api/client', (request, response) => {
-  axios(REQUESTS.DELETE_CLIENT())
-  .then(res => {
-    response.send({
-      clients : res[0].data,
-      work_entries : res[1].data,
-    });
+app.delete(`/${PATH.APP_TRACKER}/client`, (request, response) => {
+  axios.delete(API.BASE + API.ENDPOINTS.client + '/' + request.body.Id,{
+    headers : {
+      'Content-Type' : API.HEADERS.CONTENT_TYPE,
+      'x-apikey' : API.HEADERS.API_KEY
+    }
   })
-  .catch(err => {
-    response.send(err);
-  })
-});
-
-app.get('/api/work-entry', (request, response) => {
-  axios(REQUESTS.GET_ALL_WORK_ENTRIES())
   .then(res => {
     response.send(res.data);
   })
@@ -71,9 +84,122 @@ app.get('/api/work-entry', (request, response) => {
   })
 });
 
-app.get('/api/work-entry', (req, res) => {
-  res.send('API!')
+app.patch(`/${PATH.APP_TRACKER}/client`, (request, response) => {
+  
+  const CLIENT_ID = request.body.Id;
+  const UPDATE_CLIENT = request.body;
+  delete UPDATE_CLIENT.Id;
+
+  axios.patch(API.BASE + API.ENDPOINTS.work_entry + '/' + CLIENT_ID,UPDATE_CLIENT,{
+    headers : {
+      'Content-Type' : API.HEADERS.CONTENT_TYPE,
+      'x-apikey' : API.HEADERS.API_KEY
+    }
+  })
+  .then(res => {
+    response.send({
+      Id : res.data._id,
+      Name : res.data.Name,
+      Rate : res.data.Rate
+    });
+  })
+  .catch(err => {
+    response.send(err);
+  })
 });
+
+/* Client End */
+
+/* Work Entry Start */
+
+app.get(`/${PATH.APP_TRACKER}/work-entry`, (request, response) => {
+  axios(API.BASE + API.ENDPOINTS.work_entry,{
+    headers : {
+      'Content-Type' : API.HEADERS.CONTENT_TYPE,
+      'x-apikey' : API.HEADERS.API_KEY
+    }
+  })
+  .then(res => {
+    response.send(res.data);
+  })
+  .catch(err => {
+    response.send(err);
+  })
+});
+
+app.post(`/${PATH.APP_TRACKER}/work-entry`, (request, response) => {
+  
+  const NEW_ENTRY = {
+    Client : request.body.Client,
+    Start_Date : request.body.Start_Date,
+    Start_Time : request.body.Start_Time,
+    Payment_Status : request.body.Payment_Status,
+    Duration : request.body.Duration,
+  }
+
+  axios.post(API.BASE + API.ENDPOINTS.work_entry,NEW_ENTRY,{
+    headers : {
+      'Content-Type' : API.HEADERS.CONTENT_TYPE,
+      'x-apikey' : API.HEADERS.API_KEY
+    }
+  })
+  .then(res => {
+    response.send({
+      Id : res.data._id,
+      Duration : res.data.Duration,
+      Start_Date : res.data.Start_Date,
+      Start_Time : res.data.Start_Time,
+      Payment_Status : res.data.Payment_Status
+    });
+  })
+  .catch(err => {
+    response.send(err);
+  })
+});
+
+app.delete(`/${PATH.APP_TRACKER}/work-entry`, (request, response) => {
+  axios.delete(API.BASE + API.ENDPOINTS.work_entry + '/' + request.body.Id,{
+    headers : {
+      'Content-Type' : API.HEADERS.CONTENT_TYPE,
+      'x-apikey' : API.HEADERS.API_KEY
+    }
+  })
+  .then(res => {
+    response.send(res.data);
+  })
+  .catch(err => {
+    response.send(err);
+  })
+});
+
+app.patch(`/${PATH.APP_TRACKER}/work-entry`, (request, response) => {
+  
+  const ENTRY_ID = request.body.Id;
+  const UPDATE_ENTRY = request.body;
+  delete UPDATE_ENTRY.Id;
+  axios.patch(API.BASE + API.ENDPOINTS.work_entry + '/' + ENTRY_ID,UPDATE_ENTRY,{
+    headers : {
+      'Content-Type' : API.HEADERS.CONTENT_TYPE,
+      'x-apikey' : API.HEADERS.API_KEY
+    }
+  })
+  .then(res => {
+    response.send({
+      Id : res.data._id,
+      Duration : res.data.Duration,
+      Start_Date : res.data.Start_Date,
+      Start_Time : res.data.Start_Time,
+      Payment_Status : res.data.Payment_Status
+    });
+  })
+  .catch(err => {
+    response.send(err);
+  })
+});
+
+/* Work Entry End */
+
+/* Worklist Tracker End */
 
 app.listen(port, () => {
 })
