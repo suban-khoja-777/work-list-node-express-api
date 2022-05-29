@@ -9,7 +9,8 @@ const API = {
         client : "client"
     },
     HEADERS : {
-        CONTENT_TYPE : "application/json"
+        CONTENT_TYPE : "application/json",
+        API_KEY : process.env.APIKEY
     }
 }
 
@@ -33,28 +34,12 @@ const REQUESTS = {
                 'x-apikey' : process.env.APIKEY
             }
         }
-    },
-    NEW_CLIENT : (body) => {
-        return {
-            method: 'post',
-            url : API.BASE + API.ENDPOINTS.client,
-            headers : {
-                'Content-Type' : API.HEADERS.CONTENT_TYPE,
-                'x-apikey' : process.env.APIKEY
-            },
-            body : JSON.stringify(body)
-        }
-    },
-    DELETE_CLIENT : (client_id) => {
-        return {
-            method: 'delete',
-            url : API.BASE + API.ENDPOINTS.client + `/${client_id}`,
-            headers : {
-                'Content-Type' : API.HEADERS.CONTENT_TYPE,
-                'x-apikey' : process.env.APIKEY
-            }
-        }
     }
 }
 
-module.exports = {API,REQUESTS};
+const PATH = {
+    APP_TRACKER : 'tracker',
+    APP_EDITOR : 'editor'
+}
+
+module.exports = {API,REQUESTS,PATH};
