@@ -1,12 +1,10 @@
 const {API,REQUESTS,PATH} = require('./constant');
-
+const {authenticate} = require('./utility');
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const axios = require("axios");
-
 
 const app = express();
 
@@ -15,7 +13,7 @@ const app = express();
 app.use(helmet());
 
 // using bodyParser to parse JSON bodies into JS objects
-app.use(bodyParser.json());
+app.use(express.json());
 
 // enabling CORS for all requests
 app.use(cors());
@@ -23,13 +21,17 @@ app.use(cors());
 // adding morgan to log HTTP requests
 app.use(morgan('combined'));
 
+// enabling CORS for all requests
+app.use(cors());
+
 const port = 3000
 
 /* Worklist Tracker Start */
 
 /* Client Start */
 
-app.get(`/${PATH.APP_TRACKER}/client`, (request, response) => {
+app.get(`/${PATH.APP_TRACKER}/client` , (request, response) => {
+
   axios.get(API.BASE + API.ENDPOINTS.client,{
     headers : {
       'Content-Type' : API.HEADERS.CONTENT_TYPE,
@@ -202,4 +204,5 @@ app.patch(`/${PATH.APP_TRACKER}/work-entry`, (request, response) => {
 /* Worklist Tracker End */
 
 app.listen(port, () => {
+  console.log('Server STarted');
 })
