@@ -14,32 +14,9 @@ const API = {
     }
 }
 
-const REQUESTS = {
-    GET_ALL_CLIENTS : () => {
-        return {
-            method: 'get',
-            url : API.BASE + API.ENDPOINTS.client,
-            headers : {
-                'Content-Type' : API.HEADERS.CONTENT_TYPE,
-                'x-apikey' : process.env.APIKEY
-            }
-        }
-    },
-    GET_ALL_WORK_ENTRIES : () => {
-        return {
-            method: 'get',
-            url : API.BASE + API.ENDPOINTS.work_entry,
-            headers : {
-                'Content-Type' : API.HEADERS.CONTENT_TYPE,
-                'x-apikey' : process.env.APIKEY
-            }
-        }
-    }
-}
-
 const PATH = {
     APP_TRACKER : 'tracker',
     APP_EDITOR : 'editor'
 }
 
-module.exports = {API,REQUESTS,PATH};
+module.exports = {API,PATH};
