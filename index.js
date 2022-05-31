@@ -1,4 +1,4 @@
-const {API,REQUESTS,PATH} = require('./constant');
+const {API,PATH} = require('./constant');
 const {authenticate} = require('./utility');
 const express = require('express');
 const cors = require('cors');
@@ -151,7 +151,8 @@ app.post(`/${PATH.APP_TRACKER}/work-entry`, (request, response) => {
       Duration : res.data.Duration,
       Start_Date : res.data.Start_Date,
       Start_Time : res.data.Start_Time,
-      Payment_Status : res.data.Payment_Status
+      Payment_Status : res.data.Payment_Status,
+      Amount : res.data.Amount
     });
   })
   .catch(err => {
@@ -191,7 +192,8 @@ app.patch(`/${PATH.APP_TRACKER}/work-entry`, (request, response) => {
       Duration : res.data.Duration,
       Start_Date : res.data.Start_Date,
       Start_Time : res.data.Start_Time,
-      Payment_Status : res.data.Payment_Status
+      Payment_Status : res.data.Payment_Status,
+      Amount : res.data.Amount
     });
   })
   .catch(err => {
